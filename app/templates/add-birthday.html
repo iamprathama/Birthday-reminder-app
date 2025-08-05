@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Birthday</title>
+     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="as">
+    <div class="form-container">
+        <h2>➕ Add Birthday</h2>
+        <form method="POST">
+            <label>Name</label>
+            <input type="text" name="name" required>
+            <label>Date</label>
+            <input type="date" name="date" required>
+            <label>Relation</label>
+            <input type="text" name="relationship" placeholder="e.g. Friend, Brother, Mom">
+            
+      <button type="submit">Add Birthday</button>
+        </form>
+         <a href="{{ url_for('dashboard') }}" class="back-link">🔙 Back to Dashboard</a>
+    </div>
+</body>
+</html>
