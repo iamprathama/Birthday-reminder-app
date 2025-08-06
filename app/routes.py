@@ -4,10 +4,10 @@ from app import db
 from app.model import User , Birthday
 from werkzeug.security import generate_password_hash  ,check_password_hash
 from datetime import datetime
-from app import today_birthday_cache
+
 
 from app.utils.email_reminder import send_admin_email
-from datetime import date
+from app.utils.time_utils import get_ist_today
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -54,7 +54,8 @@ def dashboard():
 
     user_id = session['user_id']
     birthdays = Birthday.query.filter_by(user_id=user_id).all()
-    today = datetime.today().date()
+    today = get_ist_today()
+
     
     # Filter only current user's birthdays from cached today list
     today_birthdays = [
@@ -104,7 +105,8 @@ def delete_birthday(id):
 
 @app.route('/send-today-reminders')
 def send_today_reminders():
-    today = date.today()
+    today = get_ist_today()
+
     birthdays_today = Birthday.query.filter(
         db.extract('month', Birthday.date) == today.month,
         db.extract('day', Birthday.date) == today.day
