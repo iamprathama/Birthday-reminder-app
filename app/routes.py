@@ -1,11 +1,14 @@
-from flask import render_template, request, redirect, url_for, flash,session
+from flask import render_template, request, redirect, url_for, flash,session,abort,jsonify
 from flask import current_app as app
 from app import db
 from app.model import User , Birthday
 from werkzeug.security import generate_password_hash  ,check_password_hash
 from datetime import datetime
+import os
+from app.utils.reminder_scheduler import run_scheduler
+from dotenv import load_dotenv
 
-
+load_dotenv()
 from app.utils.email_reminder import send_admin_email
 from app.utils.time_utils import get_ist_today
 @app.route('/')
@@ -116,3 +119,14 @@ def send_today_reminders():
         send_admin_email(birthday)
 
     return "Today's birthday reminders sent!"
+# routes.py
+@app.route('/run-scheduler', methods=['GET'])
+def run_scheduler_route():
+    secret = request.args.get('secret')
+    expected_secret = os.getenv("SCHEDULER_SECRET")
+
+    if secret != expected_secret:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    message = run_scheduler()
+    return jsonify({'status': message})
